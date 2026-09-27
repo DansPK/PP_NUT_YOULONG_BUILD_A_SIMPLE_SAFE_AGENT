@@ -21,3 +21,4 @@ db/library.db
 .agents/
 .aider*
 chat_history_*.json
+proj-detail.md
