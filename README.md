@@ -2,11 +2,11 @@
 
 ## Project overview
 
-A command-line library agent backed by SQLite. It uses LiteLLM with a ModelArk model to choose tools for catalog searches, borrowing, and book management. The application checks tool requests before executing them.
+A command-line library agent backed by SQLite. It uses LiteLLM with a LLM model to choose tools for catalog searches, borrowing, and book management. The application checks tool requests before executing them.
 
 ## Quick start
 
-Requires Python 3.12 or newer and a ModelArk model with tool-calling support.
+Requires Python 3.12 or newer and LLM model with tool-calling support.
 
 ```bash
 python3 -m venv .venv

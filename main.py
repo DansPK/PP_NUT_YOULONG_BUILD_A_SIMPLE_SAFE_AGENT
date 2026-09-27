@@ -26,7 +26,7 @@ def main():
         if not request:
             continue
 
-        answer, history = run_agents(request, role, history, confirm_delete)
+        answer, history = run_agents(request, role, history, confirm_delete, debug=True)
         print("Agent:", answer)
 
 

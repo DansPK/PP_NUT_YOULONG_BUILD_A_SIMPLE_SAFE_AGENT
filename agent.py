@@ -8,7 +8,7 @@ from schemas import TOOLS
 
 
 
-def run_agents(request: str, role:str, history=None, confirm_delete=None) -> tuple[str | Any, list[Any]] | tuple[str, list[Any]]:
+def run_agents(request: str, role:str, history=None, confirm_delete=None, debug: bool = False) -> tuple[str | Any, list[Any]] | tuple[str, list[Any]]:
     history = list(history or [])
     messages = [
         {
@@ -34,7 +34,10 @@ def run_agents(request: str, role:str, history=None, confirm_delete=None) -> tup
 
 
     # Limit how many times the agent can decide what to do next
-    for _ in range(5):
+    for step in range(1, 6):
+        if debug:
+            print(f"[ReAct {step}] Decide")
+
         response = ask_llm(messages, tools=allowed_tools)
         message = response.choices[0].message
         calls = message.tool_calls or []
@@ -56,6 +59,9 @@ def run_agents(request: str, role:str, history=None, confirm_delete=None) -> tup
 
         for call in calls:
             # The model provides arguments as JSON text.
+            if debug:
+                print(f"[ReAct {step}] Action: {call.function.name}({call.function.arguments})")
+
             try:
                 args = json.loads(call.function.arguments)
                 result = run_tool(call.function.name, args, role, confirm_delete)
@@ -63,6 +69,9 @@ def run_agents(request: str, role:str, history=None, confirm_delete=None) -> tup
                 result = {
                     "error": "Invalid tool arguments",
                 }
+
+            if debug:
+                print(f"[ReAct {step}] Observation: {result}")
 
             messages.append({
                 "role": "tool",
